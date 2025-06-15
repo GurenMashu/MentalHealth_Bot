@@ -1,5 +1,5 @@
 Directory Structure ->
-
+```bash
 MentalHealth_bot
 |
 |-data
@@ -13,9 +13,10 @@ MentalHealth_bot
 |-app.py
 |-flow.py
 |-.env
+|-.gitignore
 |-README.md
 |-requirements.txt
-
+```
 
 Instructions to run:-
 1. Setup the requirements using requirements.txt
