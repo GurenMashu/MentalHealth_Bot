@@ -1,5 +1,5 @@
 # Disclaimer! :
-> This chatbot offers emotional support but is not a substitute for professional medical or mental health advice. Please consult a qualified expert for any medical concerns.
+> This chatbot offers emotional support but is not a substitute for professional medical or mental health advice. Please consult a qualified expert for any medical concerns..
 
 ## Directory Structure ->
 ```bash
