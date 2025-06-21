@@ -252,19 +252,33 @@ col1, col2 = st.columns([3, 1])
 with col1:
     st.subheader("💬 Chat")
     
-    # Display chat messages
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+    # Create a container for the chat messages with fixed height
+    chat_container = st.container()
     
-    # Chat input
+    with chat_container:
+        # Display chat messages in a scrollable container
+        if st.session_state.messages:
+            # Create a container with fixed height for scrolling
+            messages_placeholder = st.empty()
+            
+            with messages_placeholder.container():
+                # Use st.container with height parameter for scrolling
+                with st.container(height=500):
+                    for message in st.session_state.messages:
+                        with st.chat_message(message["role"]):
+                            st.markdown(message["content"])
+        else:
+            # Show empty state
+            with st.container(height=500):
+                st.info("👋 Hi there! How are you feeling today? I'm here to listen and support you.")
+    
+    # Fixed input at the bottom - this stays in place
+    st.markdown("---")  # Visual separator
+    
+    # Chat input - this will stay at the bottom
     if prompt := st.chat_input("Type your message here..."):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": prompt})
-        
-        # Display user message
-        with st.chat_message("user"):
-            st.markdown(prompt)
         
         # Get emotion and generate response
         with st.spinner("Thinking..."):
@@ -338,16 +352,15 @@ Instructions:
                 # Add only the clean response to chat history
                 st.session_state.messages.append({"role": "assistant", "content": clean_response})
                 
-                # Display assistant response
-                with st.chat_message("assistant"):
-                    st.markdown(clean_response)
+                # Rerun to update the display
+                st.rerun()
                     
             except Exception as e:
                 st.error(f"Error generating response: {str(e)}")
 
 with col2:
     # Issue display - first position
-    st.markdown("###  Current Issue")
+    st.markdown("### Current Issue")
     issue_container = st.container()
     with issue_container:
         st.markdown(f"**{st.session_state.current_issue}**")
@@ -355,7 +368,7 @@ with col2:
     st.markdown("---")  # Visual separator
     
     # Suggested activities - second position
-    st.markdown("###  Suggested Activities")
+    st.markdown("### Suggested Activities")
     
     activities_container = st.container()
     with activities_container:
@@ -377,7 +390,7 @@ with col2:
     
     # Display recent issues from conversation history
     if st.session_state.messages:
-        st.markdown("###  Recent Issues")
+        st.markdown("### Recent Issues")
         
         # Get issues from conversation contexts if available, otherwise generate from recent messages
         if 'conversation_contexts' in st.session_state and st.session_state.conversation_contexts:
@@ -407,4 +420,5 @@ with col2:
         st.session_state.current_activities = []
         st.session_state.conversation_contexts = []
         st.session_state.conversation_summary = ""
+        conversation_history = ""
         st.rerun()
